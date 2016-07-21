@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <RelativeLayout
+        android:id="@+id/parentTopPanel"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/userSelfImg"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="fitXY"
+            android:layout_marginTop="3dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/user"/>
+
+        <RelativeLayout
+            android:id="@+id/mainView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_toLeftOf="@id/userSelfImg">
+
+            <TextView
+                android:id="@+id/textMsgTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sample text"
+                android:textColor="#3b3b3b"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:maxEms="16"
+                android:minEms="8"
+                android:textSize="12sp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:background="@drawable/chat_msg_self"
+                android:layout_marginRight="6dp"/>
+
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainView"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_alignLeft="@id/mainView"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/justNowText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Just Now"
+                android:layout_marginLeft="5dp"
+                android:textSize="10sp"
+                android:textColor="@color/colorforlistdivider"/>
+
+            <ImageView
+                android:id="@+id/sentInfo"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/inbetween_distance"
+                android:src="@mipmap/single_tick_icon" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
