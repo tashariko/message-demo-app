@@ -12,6 +12,7 @@ public class MessageApplicatio extends Application {
     public static String SMS_SENT = "tasha.SMS_SENT";
     public static String SMS_DELIVERED = "tasha.SMS_DELIVERED";
 
+
     @Override
     public void onCreate() {
         super.onCreate();

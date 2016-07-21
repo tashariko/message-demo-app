@@ -60,41 +60,6 @@ public class RetrieveMsgForHome {
         callback.list(adapterList);
     }
 
-
-    public void getMessageForPerson(String add, Context context, MessageListCallback callback) {
-        ArrayList<UserModel> adapterList = new ArrayList<>();
-
-        String[] request = new String[]{"_id", "body", "date", "address","person","status"};
-        ContentResolver contentResolver = context.getContentResolver();
-
-        Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, request,
-                Telephony.TextBasedSmsColumns.ADDRESS+"=?",new String[]{add}, null);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                UserModel model = new UserModel();
-
-                    model.id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
-                    model.msg = cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.BODY));
-                    model.sentStatus= cursor.getInt(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.STATUS));
-                    model.time = TimeSpentManager.setTimeAgo(context, Long.parseLong(cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.DATE))));
-
-                    if(cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.PERSON))!=null) {
-                        model.isMine=false;
-                    }else{
-                        model.isMine=true;
-                    }
-
-                    adapterList.add(model);
-                    cursor.moveToNext();
-            }
-        }
-
-        Log.i("MSG_LENGTH", String.valueOf(adapterList.size()));
-        callback.list(adapterList);
-    }
-
     public void getMessageCursor(String add, Context context, MessageCursorCallback callback){
 
         String[] request = new String[]{"_id", "body", "date", "address","person","status","seen"};
@@ -112,9 +77,6 @@ public class RetrieveMsgForHome {
 
         Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, request,
                 BaseColumns._ID+"=?",new String[]{id}, null);
-
-
-
     }
 
     public interface MessageListCallback {

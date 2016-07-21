@@ -65,9 +65,10 @@
             android:id="@+id/sendMsgButton"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:background="@color/windowBackground"
+            android:background="#fff"
             android:tintMode="src_in"
             android:layout_margin="1dp"
+            android:scaleType="fitCenter"
             android:tint="@color/colorPrimary"
             android:layout_alignParentRight="true"
             android:src="@mipmap/send_icon" />
