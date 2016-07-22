@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class CustomNotification {
 
-    public static String GRP_KEY="GRP_KEY";
+    public static String GRP_KEY="GROUP_KEY";
     private Notification.InboxStyle inboxStyle;
     private String mobile="";
 
