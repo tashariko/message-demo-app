@@ -10,6 +10,7 @@ import android.widget.CursorAdapter;
 
 import com.message.tasha.model.UserModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +18,8 @@ import java.util.ArrayList;
  */
 
 public class RetrieveMsgForHome {
+
+
 
     public void getMessage(String type, Context context, MessageListCallback callback) {
         ArrayList<UserModel> adapterList = new ArrayList<>();
@@ -54,11 +57,46 @@ public class RetrieveMsgForHome {
                 }
                 cursor.moveToNext();
             }
+
+            cursor.close();
         }
 
         Log.i("MSG_LENGTH", String.valueOf(adapterList.size()));
         callback.list(adapterList);
     }
+
+
+
+    public void getMessagesFromText(String text,Context context,MessageListCallback callback){
+        ArrayList<UserModel> adapterList = new ArrayList<>();
+
+        String[] request = new String[]{"_id", "body", "date", "address","person"};
+        ContentResolver contentResolver = context.getContentResolver();
+
+        Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, request,Telephony.TextBasedSmsColumns.BODY+" like ?",
+                new String[]{"%"+text+"%"}, "date ASC");
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                UserModel model = new UserModel();
+
+                model.address= cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.ADDRESS));
+                model.id = cursor.getString(cursor.getColumnIndex(BaseColumns._ID));
+                model.msg = cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.BODY));
+                model.time = TimeSpentManager.setTimeAgo(context, Long.parseLong(cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.DATE))));
+                model.person=cursor.getString(cursor.getColumnIndex(Telephony.TextBasedSmsColumns.PERSON));
+
+                adapterList.add(model);
+                cursor.moveToNext();
+            }
+        }
+
+        Log.i("MSG_LENGTH", String.valueOf(adapterList.size()));
+        callback.list(adapterList);
+    }
+
+
 
     public void getMessageCursor(String add, Context context, MessageCursorCallback callback){
 
@@ -68,15 +106,11 @@ public class RetrieveMsgForHome {
         Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, request,
                 Telephony.TextBasedSmsColumns.ADDRESS+"=?",new String[]{add}, "date ASC");
 
-        callback.list(cursor);
-    }
-
-    public void getMsgById(String id,Context context){
-        String[] request = new String[]{"_id", "body", "date", "address","person","status","seen"};
-        ContentResolver contentResolver = context.getContentResolver();
-
-        Cursor cursor = contentResolver.query(Telephony.Sms.CONTENT_URI, request,
-                BaseColumns._ID+"=?",new String[]{id}, null);
+        try {
+            callback.list(cursor);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public interface MessageListCallback {
@@ -84,7 +118,7 @@ public class RetrieveMsgForHome {
     }
 
     public interface MessageCursorCallback {
-        public void list(Cursor cursor);
+        public void list(Cursor cursor) throws IOException;
     }
 
 }

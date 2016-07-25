@@ -7,6 +7,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 
+import com.message.tasha.MessageApplicatio;
 import com.message.tasha.R;
 import com.message.tasha.activity.MessageActivity;
 import com.message.tasha.activity.StartUpActivity;
@@ -19,14 +20,12 @@ import java.util.Random;
 
 public class CustomNotification {
 
-    public static String GRP_KEY="GROUP_KEY";
-    private Notification.InboxStyle inboxStyle;
-    private String mobile="";
-
-    int id=0;
-    int numMsg=0;
-
     public static NotificationManager notiManager;
+    public static String mobile="";
+    private PendingIntent resultPendingIntent;
+    private Notification noti;
+    public static int number=1;
+    public static String inboxMsg="";
 
     public void addNotiMessage(Context context, String mobile, String msg) {
         Notification.Builder mBuilder =
@@ -35,36 +34,45 @@ public class CustomNotification {
                         .setContentTitle(mobile)
                         .setContentText(msg);
 
-        Random r = new Random();
-        id = r.nextInt(10000);
-
-        Intent resultIntent = new Intent(context, MessageActivity.class);
-        resultIntent.putExtra("address",mobile);
-        resultIntent.putExtra("person","");
-        resultIntent.putExtra("notiId",id);
-
-        inboxStyle=new Notification.InboxStyle(mBuilder);
-        //if(!mobile.equals(CustomNotification.this.mobile)){
-            inboxStyle.setBigContentTitle(mobile);
-            inboxStyle.addLine(msg);
-        //}
-
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-        stackBuilder.addParentStack(StartUpActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent).setNumber(++numMsg);
         notiManager= (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mBuilder.setStyle(inboxStyle);
+        if(this.mobile.equals("")) {
 
-        Notification noti=new Notification.BigTextStyle(mBuilder.setNumber(++numMsg).setContentText(msg)).bigText(msg).build();
+            inboxMsg=msg;
+            MessageApplicatio.id++;
+            Intent resultIntent = new Intent(context, MessageActivity.class);
+            resultIntent.putExtra("address",mobile);
+            resultIntent.putExtra("person","");
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addParentStack(StartUpActivity.class);
+            stackBuilder.addNextIntent(resultIntent);
+            resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
 
-        CustomNotification.this.mobile=mobile;
-        notiManager.notify(0, noti);
+            this.mobile=mobile;
+            mBuilder.setContentIntent(resultPendingIntent);
+            noti=new Notification.BigTextStyle(mBuilder.setContentText(msg)).bigText(msg).build();
+        }else{
+            number++;
+
+            Intent resultIntent = new Intent(context, StartUpActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+            stackBuilder.addNextIntent(resultIntent);
+            stackBuilder.addParentStack(StartUpActivity.class);
+            resultPendingIntent =
+                    stackBuilder.getPendingIntent(
+                            0,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+            mBuilder.setContentIntent(resultPendingIntent);
+            noti=new Notification.InboxStyle(mBuilder.setContentTitle(String.valueOf(number)+" Messages").setNumber(number)).addLine(inboxMsg).addLine(msg).build();
+        }
+
+
+        notiManager.notify(MessageApplicatio.id, noti);
+
     }
 }

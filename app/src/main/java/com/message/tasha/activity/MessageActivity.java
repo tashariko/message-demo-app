@@ -1,13 +1,17 @@
 package com.message.tasha.activity;
 
 import android.app.PendingIntent;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -55,6 +59,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private ArrayList<UserModel> adapterList;
     private MessageCursorAdapter msgAdapter;
+    private Cursor dataCursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,17 +76,14 @@ public class MessageActivity extends AppCompatActivity {
         address=bundle.getString("address");
         person=bundle.getString("person");
 
-        if(bundle.containsKey("notiId")){
-            if(CustomNotification.notiManager!=null)
-                CustomNotification.notiManager.cancel(bundle.getInt("notiId"));
-        }else{
-            if(CustomNotification.notiManager!=null)
-                CustomNotification.notiManager.cancelAll();
-        }
 
+        if(CustomNotification.notiManager!=null)
+            CustomNotification.notiManager.cancelAll();
+
+        CustomNotification.mobile="";
+        CustomNotification.inboxMsg="";
         title.setText(address);
 
-        //initData();
         updateCursor();
 
         listener();
@@ -106,10 +108,13 @@ public class MessageActivity extends AppCompatActivity {
         PendingIntent sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_SENT), 0);
         PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SMS_DELIVERED), 0);
 
-        String msg=  sendText.getText().toString();
-        SmsManager smsManager=SmsManager.getDefault();
-        smsManager.sendTextMessage(address,null,msg,sentPendingIntent,deliveredPendingIntent);
-
+        try {
+            String msg = sendText.getText().toString();
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(address, null, msg, sentPendingIntent, deliveredPendingIntent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         sendText.setText("");
 
     }
@@ -118,6 +123,8 @@ public class MessageActivity extends AppCompatActivity {
         new RetrieveMsgForHome().getMessageCursor(address, getApplicationContext(), new RetrieveMsgForHome.MessageCursorCallback() {
             @Override
             public void list(Cursor cursor) {
+
+                dataCursor=cursor;
 
                 Log.i("SIZE_LIST", String.valueOf(cursor.getCount()));
 
@@ -130,6 +137,15 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     public void updateEditText() {
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(dataCursor!=null && !dataCursor.isClosed())
+            dataCursor.close();
 
     }
 }

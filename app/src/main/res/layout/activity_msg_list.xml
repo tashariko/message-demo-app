@@ -10,7 +10,8 @@
         android:id="@+id/toolbar"
         android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,18 +40,14 @@
 
     </ListView>
 
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/newMessageButton"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+    <TextView
+        android:id="@+id/emptyText"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@mipmap/add_user_icon"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorRipple="@color/colorHintText">
-
-        </com.github.clans.fab.FloatingActionButton>
+        android:text="No Message Found."
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorPrimaryDark"/>
 
 </RelativeLayout>

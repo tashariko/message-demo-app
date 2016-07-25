@@ -8,10 +8,11 @@ import android.app.Application;
  */
 public class MessageApplicatio extends Application {
 
-    public static MessageApplicatio instance;
+    private static MessageApplicatio instance;
     public static String SMS_SENT = "tasha.SMS_SENT";
     public static String SMS_DELIVERED = "tasha.SMS_DELIVERED";
 
+    public static int id=0;
 
     @Override
     public void onCreate() {
@@ -19,7 +20,7 @@ public class MessageApplicatio extends Application {
         instance=this;
     }
 
-    public MessageApplicatio getInstance(){
+    public static MessageApplicatio getInstance(){
         return instance;
     }
 }

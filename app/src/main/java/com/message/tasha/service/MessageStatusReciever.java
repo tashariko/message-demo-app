@@ -50,14 +50,9 @@ public class MessageStatusReciever extends BroadcastReceiver {
                 for (int i=0; i < msgs.length; i++) {
                     msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                     mobile=msgs[i].getOriginatingAddress();
-                    // Fetch the text message
                     msg +=msgs[i].getMessageBody().toString();
-                    // Newline <img draggable="false" class="emoji" alt="🙂" src="https://s.w.org/images/core/emoji/72x72/1f642.png">
                     msg+= "\n";
                 }
-
-                // Display the entire SMS Message
-                Log.d(TAG, msg);
 
                 new CustomNotification().addNotiMessage(context,mobile,msg);
             }
