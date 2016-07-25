@@ -7,7 +7,6 @@ The app uses following libraries:
         for accessing the drive from the google play services.
 
 - com.android.support:appcompat-v7:23.4.0
-- 
         to use the support library for android.
 
 - com.jakewharton:butterknife:7.0.1
