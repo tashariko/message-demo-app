@@ -1,6 +1,6 @@
 # message-demo-app
 App to show the functions of the text messaging app with integrated notification and the feature to upload messages to google drive.
-
+It shows the message in the thread format.
 The app uses following libraries:
   
 - com.google.android.gms:play-services-drive:9.2.0 
